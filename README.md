@@ -48,7 +48,7 @@ You could also generate an installable CRX package. See below for details. To in
 
 ## Development setup
 
-0.  rm -r node_modules/ && npm ci
+0. `rm -r node_modules/ && npm ci`  optional for first time
 1. `npm install` to install dev dependencies.
 2. `npm run lint` to check JS code for common errors/formatting issues.
 3. `npm run watch` to monitor extension sources for changes and regenerate extension JS bundles as needed. Leave this process running in a terminal as you work on the extension. Note that you still have to reload Chameleon in Chrome from the `chrome://extensions` page whenever you update Chameleon's injected script or background page.

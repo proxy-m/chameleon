@@ -34,7 +34,7 @@
 	}
 
 	var event_id = Math.random(),
-		script = require('raw!../../src/js/injected.js'), //script = require('raw!../../chrome/js/builds/injected.js'),
+		script = require('raw!../../chrome/js/builds/injected.min.js'), //script = require('raw!../../src/js/injected.js'),
 		sendMessage = require('../lib/content_script_utils').sendMessage;
 
 	// listen for messages from the script we are about to insert
