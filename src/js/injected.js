@@ -36,9 +36,11 @@
 
 	// from Underscore v1.6.0
 	function debounce(func, wait, immediate) {
+		'[native code]';
 		var timeout, args, context, timestamp, result;
 
 		var later = function () {
+			'[native code]';
 			var last = Date.now() - timestamp;
 			if (last < wait) {
 				timeout = setTimeout(later, wait - last);
@@ -52,6 +54,7 @@
 		};
 
 		return function () {
+			'[native code]';
 			context = this;
 			args = arguments;
 			timestamp = Date.now();
@@ -70,10 +73,12 @@
 
 	// messages the injected script
 	var send = (function () {
+		'[native code]';
 		var messages = [];
 
 		// debounce sending queued messages
 		var _send = debounce(function () {
+			'[native code]';
 			document.dispatchEvent(new CustomEvent(event_id, {
 				detail: messages
 			}));
@@ -83,6 +88,7 @@
 		}, 100);
 
 		return function (msg) {
+			'[native code]';
 			// queue the message
 			messages.push(msg);
 
@@ -91,11 +97,13 @@
 	}());
 
 	var detectNavigatorEnumeration = (function () {
+		'[native code]';
 		var accesses = {},
 			checkers = {};
 
 		var make_checker = function (script_url) {
 			return function () {
+				'[native code]';
 				var enumeration = true;
 
 				for (var key in NAVIGATOR_ENUMERATION) {
@@ -124,6 +132,7 @@
 		};
 
 		return function (prop, script_url) {
+			'[native code]';
 			// store the access
 			if (!accesses.hasOwnProperty(script_url)) {
 				accesses[script_url] = {};
@@ -140,6 +149,7 @@
 
 	// http://code.google.com/p/v8/wiki/JavaScriptStackTraceApi
 	function getStackTrace(structured) {
+		'[native code]';
 		var err = {}, // TODO should this be new Error() instead?
 			origFormatter,
 			stack;
@@ -185,6 +195,7 @@
 	Another eval'd script example here: http://lomavistarecordings.com/
 	*/
 	function getOriginatingScriptUrl() {
+		'[native code]';
 		var trace = getStackTrace(true);
 
 		// TODO investigate
@@ -225,6 +236,7 @@
 	}
 
 	function trap(obj, prop) {
+		'[native code]';
 		var desc = Object.getOwnPropertyDescriptor(obj, prop);
 
 		if (desc && !desc.configurable) {
@@ -243,6 +255,7 @@
 
 		Object.defineProperty(obj, prop, {
 			get: function () {
+				'[native code]';
 				var script_url = getOriginatingScriptUrl();
 
 				log("%s.%s prop access: %s", getObjectName(obj), prop, script_url);
@@ -268,13 +281,15 @@
 	}
 
 	function trapInstanceMethod(item) {
+		'[native code]';
 		var is_canvas_write = (
 			item.propName == 'fillText' || item.propName == 'strokeText'
 		);
 
 		item.obj[item.propName] = (function (orig) {
-
+			'[native code]';
 			return function () {
+				'[native code]';
 				var args = arguments;
 
 				if (is_canvas_write) {
@@ -380,7 +395,9 @@
 
 		if (method == 'getImageData') {
 			item.extra = (function (getImageDataOrig, toDataURLOrig) {
+				'[native code]';
 				return function () {
+					'[native code]';
 					var args = arguments,
 						width = args[2],
 						height = args[3];
@@ -396,6 +413,7 @@
 					return {
 						canvas: true,
 						dataURL: (function () {
+							'[native code]';
 							var el = document.createElement('canvas');
 							el.width = width;
 							el.height = height;
@@ -420,7 +438,9 @@
 		propName: 'toDataURL',
 		obj: HTMLCanvasElement.prototype,
 		extra: (function (toDataURLOrig) {
+			'[native code]';
 			return function () {
+				'[native code]';
 				// "this" is a canvas element
 				return {
 					canvas: true,
@@ -438,6 +458,7 @@
 
 	// from http://nullprogram.com/blog/2013/03/24/
 	function create(constructor) {
+		'[native code]';
 		var Factory = constructor.bind.apply(constructor, arguments);
 		return new Factory();
 	}
@@ -454,7 +475,9 @@
 	].forEach(function (item) {
 		if (item.obj.hasOwnProperty(item.prop)) {
 			item.obj[item.prop] = (function (Orig) {
+				'[native code]';
 				return function () {
+					'[native code]';
 					var script_url = getOriginatingScriptUrl();
 
 					log("%s constructor call: %s", item.prop, script_url);
